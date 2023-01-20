@@ -21,8 +21,8 @@ close all;
 %%
 
 
-cd("Measurement_11_01_2023\"); % change depending on folder name
-subject_name = 'Katja:'; % change depending on subject name
+cd("barefoot\"); % change depending on folder name
+subject_name = 'KatjaKo:'; % change depending on subject name
 files_list_vicon = dir("*vicon*.csv"); % change depending on file name
 files_list_force = dir("*force*.csv"); % change depending on file name
 row_parameters_name = 3;
