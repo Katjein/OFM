@@ -8,7 +8,7 @@ close all;
 % - filtern?
 % - force IC detection --> threshhold 2x --> save idx --> round up if subframe > 0 // stride.start(n_trial) = idx
 % - parameter for end of cycle --> ankle --> stride.end(n_trials) = idx
-% - cycle cut --> cycles.parameter -> preallocate nans based on max length
+% - cycle cuttn --> cycles.parameter -> preallocate nans based on max length
 % - normalisation / interpolation
 % - average
 % - plots
@@ -21,8 +21,8 @@ close all;
 %%
 
 
-cd("Measurement_11_01_2023\"); % change depending on folder name
-subject_name = 'Katja:'; % change depending on subject name
+cd("shoe\"); % change depending on folder name
+subject_name = 'KatjaK:'; % change depending on subject name
 files_list_vicon = dir("*vicon*.csv"); % change depending on file name
 files_list_force = dir("*force*.csv"); % change depending on file name
 row_parameters_name = 3;
@@ -48,11 +48,11 @@ for trial_number = 1:number_trials
     % starting column
     current_vicon_data = vicon.raw.(strcat("trial_",num2str(trial_number)));
     data_points = length(current_vicon_data(row_parameters_data_start:end, 1));
-	parameters(:,trial_number) = current_vicon_data(row_parameters_name,:);
-    for j = 1:length(parameters(:,trial_number))
-        if ~ismissing(parameters{j,trial_number})
+	parameters = current_vicon_data(row_parameters_name,:)';
+    for j = 1:length(parameters)
+        if ~ismissing(parameters{j,:})
         parameters_list{j,1,trial_number} = j;
-        new_parameter_name = erase(parameters{j,trial_number}, subject_name);
+        new_parameter_name = erase(parameters{j,:}, subject_name);
         parameters_list{j,2,trial_number} = new_parameter_name;
         end
     end
@@ -96,7 +96,7 @@ for trial_number = 1:number_trials
     disp(['trial_finished', num2str(trial_number)]);
 end
 
-save("data_sorted.mat", "vicon", "force", "parameter_names");
+% save("data_sorted.mat", "vicon", "force", "parameter_names");
 
 
 
