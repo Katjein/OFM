@@ -4,7 +4,7 @@ close all;
 
 %%
 
-cd("barefoot\");
+cd("../Measurement_20_01_2023/barefoot\"); % Matthias: "barefoot\" % Katja: "../Measurement_20_01_2023/barefoot\" 
 load("data_sorted.mat");
 
 start_force_data = 6;
@@ -14,35 +14,38 @@ column_of_interest = 3;
 number_trials = length(fieldnames(vicon.raw));
 stride = struct();
 cycles_complete = struct();
-columns_data_cycles = [3:5];
+columns_data_cycles = [3:5]; %#ok<*NBRAK2> 
 
 for n_trial = 1:number_trials
     current_trial_data =  force.(strcat("trial_",num2str(n_trial)));
     data_of_interest = cell2mat(current_trial_data(start_force_data:end, column_of_interest));
-    [IC_idx(n_trial), ~] = find(data_of_interest ~= 0, 1, "first");
+    [IC_idx(n_trial), ~] = find(data_of_interest ~= 0, 1, "first"); %#ok<*SAGROW> 
     IC_idx_corrected(n_trial) = IC_idx(n_trial) + start_force_data - 1;
     stride.start(n_trial, 1) = current_trial_data{IC_idx_corrected(n_trial),frame_col};
 end
+% clear variables that are not further accessed
+clear current_trial_data data_of_interest IC_idx IC_idx_corrected
 
 
 list_parameters = {'RKneeAngles'}; % list parameters that should be displayed
-axes_of_interest = [3]; % define axes that might be used for IC determination --> same order as parameters listed above
+axes_of_interest = 3; % define axes that might be used for IC determination --> same order as parameters listed above
 colors = [0.4660 0.6740 0.1880;0.8500 0.3250 0.0980;0 0.4470 0.7410]; % green/axes 3, orange/axes4, blue/axes5
 
-idx_step_width_ICs = [2];
+% idx_step_width_ICs = 2;
 stride.ICs = struct();
 stride.ICs = cell(number_trials, 1);
 for current_parameter = 1:length(list_parameters)
     stride.all_endpoints.(cell2mat(list_parameters(current_parameter))) = nan(number_trials,1);
     stride.IC_occurance.(cell2mat(list_parameters(current_parameter))) = nan(50,number_trials); % 50 to be sure there is enough space to store all occurances
     figure(current_parameter)
-    %predefine for later
+    % predefine for later
     for n_trial = 1:number_trials
         find_ICs = true;
-        cycle_counter = 0;
+%         cycle_counter = 0;
         current_data = vicon.sorted.(strcat("trial_",num2str(n_trial))).(cell2mat(list_parameters(current_parameter)));
         stride.start(n_trial, 1) = find(current_data(:,1) == stride.start(n_trial, 1));
-        %plot all axes and point of IC based on forceplate
+
+        % PLOT all axes and point of IC based on forceplate
         for current_axes = 1:1
             subplot(number_trials/2, 2, n_trial)
             plot(current_data(:,2+current_axes),'Color',colors(current_axes,:))
@@ -55,6 +58,7 @@ for current_parameter = 1:length(list_parameters)
         stride.all_endpoints.(cell2mat(list_parameters(current_parameter)))(n_trial) = current_data(stride.start(n_trial),axes_of_interest(current_parameter));
         text((stride.start(n_trial) +5),(max(max_value) -5),num2str(stride.all_endpoints.(cell2mat(list_parameters(current_parameter)))(n_trial)));
         text((stride.start(n_trial) +5),(min(min_value) +5),num2str(stride.start(n_trial)));
+
         % search vectors for points where value of IC occurs again
         point_found_counter = 0;
         for data_point = 1:(size(current_data,1) -1)
@@ -72,7 +76,8 @@ for current_parameter = 1:length(list_parameters)
                 stride.IC_occurance.(cell2mat(list_parameters(current_parameter)))(point_found_counter, n_trial) = data_point;
             end
         end
-        % plot IC_occurances
+
+        % PLOT IC_occurances
         for i = 1:length(stride.IC_occurance.(cell2mat(list_parameters(current_parameter)))(:,n_trial))
             if ~isnan(stride.IC_occurance.(cell2mat(list_parameters(current_parameter)))(i,n_trial))
                 plot(stride.IC_occurance.(cell2mat(list_parameters(current_parameter)))(i,n_trial),...
@@ -96,6 +101,8 @@ for current_parameter = 1:length(list_parameters)
         stride.ICs(n_trial) = {all_ICs};
     end
 end
+% clear variables that are not further accessed
+clear current_parameter find_ICs current_axes min_value max_value point_found_counter i new_IC
 
 
 %% cut cycles
@@ -118,4 +125,5 @@ for n_trial = 1:number_trials
         end
     end
 end
-
+% clear variables that are not further accessed
+clear n_trial current_idx current_data IC_counter param
