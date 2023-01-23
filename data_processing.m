@@ -46,8 +46,10 @@ for trial_number = 1:number_trials
 
     % write complete data in struct and create list of parameters with
     % starting column
+    % del
     current_vicon_data = vicon.raw.(strcat("trial_",num2str(trial_number)));
     data_points = length(current_vicon_data(row_parameters_data_start:end, 1));
+
 	parameters = current_vicon_data(row_parameters_name,:)';
     for j = 1:length(parameters)
         if ~ismissing(parameters{j,:})
@@ -72,7 +74,7 @@ for trial_number = 1:number_trials
     number_parameters = size(index_parameters,1);
     vicon.sorted.(strcat("trial_",num2str(trial_number))) = struct();
     for j = 1:(number_parameters -1)
-        parameter_names{j,1} = parameters_list(index_parameters(j),2);
+        parameter_names{j,:} = parameters_list(index_parameters(j),2);
         vicon.sorted.(strcat("trial_",num2str(trial_number))).(cell2mat(parameters_list(index_parameters(j),2))) = struct(); % creating struct for parameter
         current_param_column_count = index_parameters(j+1, 1, trial_number) - index_parameters(j, 1, trial_number);
         vicon.sorted.(strcat("trial_",num2str(trial_number))).(cell2mat(parameters_list(index_parameters(j),2))) = nan((size(current_vicon_data,1)) - row_parameters_data_start +3, (2+current_param_column_count));

@@ -34,7 +34,7 @@ stride.ICs = struct();
 stride.ICs = cell(number_trials, 1);
 for current_parameter = 1:length(list_parameters)
     stride.all_endpoints.(cell2mat(list_parameters(current_parameter))) = nan(number_trials,1);
-    stride.IC_occurance.(cell2mat(list_parameters(current_parameter))) = nan(50,number_trials); % 50 to be sure there is enough space to store all occurances
+    stride.IC_occurance.(cell2mat(list_parameters(current_parameter))) = nan(50,number_tstride.startrials); % 50 to be sure there is enough space to store all occurances
     figure(current_parameter)
     %predefine for later
     for n_trial = 1:number_trials
@@ -99,7 +99,9 @@ end
 
 
 %% cut cycles
-for n_para = 1:length(parameter_names)
+
+
+for n_para = 1:length(parameter_names(:,n_trial))
     cycles_complete.(cell2mat(parameter_names{n_para})) = cell(10,number_trials);
 end
 
@@ -118,5 +120,6 @@ for n_trial = 1:number_trials
         end
     end
 end
+
 
 %% comment
