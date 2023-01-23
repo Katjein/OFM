@@ -8,7 +8,7 @@ close all;
 % - filtern?
 % - force IC detection --> threshhold 2x --> save idx --> round up if subframe > 0 // stride.start(n_trial) = idx
 % - parameter for end of cycle --> ankle --> stride.end(n_trials) = idx
-% - cycle cuttn --> cycles.parameter -> preallocate nans based on max length
+% - cut cycles --> cycles.parameter -> preallocate nans based on max length
 % - normalisation / interpolation
 % - average
 % - plots
@@ -21,7 +21,7 @@ close all;
 %%
 
 
-cd("shoe\"); % change depending on folder name
+cd("../Measurement_20_01_2023/shoe\"); % change depending on folder name  %Katja:  ../Measurement_20_01_2023/shoe\
 subject_name = 'KatjaK:'; % change depending on subject name
 files_list_vicon = dir("*vicon*.csv"); % change depending on file name
 files_list_force = dir("*force*.csv"); % change depending on file name
@@ -51,7 +51,7 @@ for trial_number = 1:number_trials
 	parameters = current_vicon_data(row_parameters_name,:)';
     for j = 1:length(parameters)
         if ~ismissing(parameters{j,:})
-        parameters_list{j,1,trial_number} = j;
+        parameters_list{j,1,trial_number} = j; %#ok<*SAGROW> 
         new_parameter_name = erase(parameters{j,:}, subject_name);
         parameters_list{j,2,trial_number} = new_parameter_name;
         end
