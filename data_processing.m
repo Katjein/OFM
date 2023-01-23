@@ -21,7 +21,7 @@ close all;
 %%
 
 
-cd("../Measurement_20_01_2023/shoe\"); % change depending on folder name  %Katja:  ../Measurement_20_01_2023/shoe\
+cd("shoe"); % change depending on folder name  %Katja:  ../Measurement_20_01_2023/shoe\
 subject_name = 'KatjaK:'; % change depending on subject name
 files_list_vicon = dir("*vicon*.csv"); % change depending on file name
 files_list_force = dir("*force*.csv"); % change depending on file name
@@ -49,6 +49,13 @@ for trial_number = 1:number_trials
     % del
     current_vicon_data = vicon.raw.(strcat("trial_",num2str(trial_number)));
     data_points = length(current_vicon_data(row_parameters_data_start:end, 1));
+
+    if strcmp(current_vicon_data(3,262),('KatjaK:RNormalisedGRF'))      
+        current_vicon_data(:,262:end -3) = current_vicon_data(:,265:end);
+        current_vicon_data = current_vicon_data(:, 1:298);
+        current_vicon_data(:,190:end -6) = current_vicon_data(:,196:end);
+        current_vicon_data = current_vicon_data(:, 1:292);
+    end
 
 	parameters = current_vicon_data(row_parameters_name,:)';
     for j = 1:length(parameters)

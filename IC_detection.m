@@ -4,7 +4,7 @@ close all;
 
 %%
 
-cd("../Measurement_20_01_2023/barefoot\"); % Matthias: "barefoot\" % Katja: "../Measurement_20_01_2023/barefoot\" 
+cd("shoe"); % Matthias: "barefoot\" % Katja: "../Measurement_20_01_2023/barefoot\" 
 load("data_sorted.mat");
 
 start_force_data = 6;
@@ -36,7 +36,7 @@ stride.ICs = struct();
 stride.ICs = cell(number_trials, 1);
 for current_parameter = 1:length(list_parameters)
     stride.all_endpoints.(cell2mat(list_parameters(current_parameter))) = nan(number_trials,1);
-    stride.IC_occurance.(cell2mat(list_parameters(current_parameter))) = nan(50,number_tstride.startrials); % 50 to be sure there is enough space to store all occurances
+    stride.IC_occurance.(cell2mat(list_parameters(current_parameter))) = nan(50,number_trials); % 50 to be sure there is enough space to store all occurances
     figure(current_parameter)
     % predefine for later
     for n_trial = 1:number_trials
@@ -108,7 +108,7 @@ clear current_parameter find_ICs current_axes min_value max_value point_found_co
 %% cut cycles
 
 
-for n_para = 1:length(parameter_names(:,n_trial))
+for n_para = 1:length(parameter_names)
     cycles_complete.(cell2mat(parameter_names{n_para})) = cell(10,number_trials);
 end
 
@@ -128,3 +128,14 @@ for n_trial = 1:number_trials
     end
 end
 % clear variables that are not further accessed
+
+
+% plot
+for j = 1:12
+    for i = 1:4
+    temp_data = cycles_complete.RKneeAngles{i,j};
+    figure(2)
+    plot(temp_data(:,1))
+    hold on;
+    end
+end
