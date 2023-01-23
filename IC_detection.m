@@ -126,4 +126,3 @@ for n_trial = 1:number_trials
     end
 end
 % clear variables that are not further accessed
-clear n_trial current_idx current_data IC_counter param
