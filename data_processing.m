@@ -96,7 +96,7 @@ for trial_number = 1:number_trials
     disp(['trial_finished', num2str(trial_number)]);
 end
 
-% save("data_sorted.mat", "vicon", "force", "parameter_names");
+save("data_sorted.mat", "vicon", "force", "parameter_names");
 
 
 

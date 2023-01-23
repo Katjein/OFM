@@ -4,7 +4,7 @@ close all;
 
 %%
 
-cd("barefoot\");
+cd("shoe\");
 load("data_sorted.mat");
 
 start_force_data = 6;
@@ -119,3 +119,4 @@ for n_trial = 1:number_trials
     end
 end
 
+%% comment
