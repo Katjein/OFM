@@ -31,7 +31,6 @@ list_parameters = {'RKneeAngles'}; % list parameters that should be displayed
 axes_of_interest = 3; % define axes that might be used for IC determination --> same order as parameters listed above
 colors = [0.4660 0.6740 0.1880;0.8500 0.3250 0.0980;0 0.4470 0.7410]; % green/axes 3, orange/axes4, blue/axes5
 
-% idx_step_width_ICs = 2;
 stride.ICs = struct();
 stride.ICs = cell(number_trials, 1);
 for current_parameter = 1:length(list_parameters)
@@ -41,7 +40,6 @@ for current_parameter = 1:length(list_parameters)
     % predefine for later
     for n_trial = 1:number_trials
         find_ICs = true;
-%         cycle_counter = 0;
         current_data = vicon.sorted.(strcat("trial_",num2str(n_trial))).(cell2mat(list_parameters(current_parameter)));
         stride.start(n_trial, 1) = find(current_data(:,1) == stride.start(n_trial, 1));
 
