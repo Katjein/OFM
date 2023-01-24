@@ -4,7 +4,7 @@ close all;
 
 %%
 
-cd("shoe\"); % Matthias: "barefoot\" % Katja: "../Measurement_20_01_2023/barefoot\" 
+cd("shoe\"); 
 load("data_sorted.mat");
 
 start_force_data = 6;
@@ -157,13 +157,12 @@ for ctr_parameter = 1 : length(parameter_names)
             sample_values = current_parameter{ctr_cycle, ctr_trial};
             query_points = 1 : 1 : 101;
 
-            interp_x = interp1(sample_points, sample_values, query_points, 'makima');
+            interp_x = interp1(sample_points, sample_values, query_points, 'spline');
 %             interp_y = interp1(sample_points, sample_values(:, 2), query_points, 'spline');
 %             interp_z = interp1(sample_points, sample_values(:, 3), query_points, 'spline');
     
             % store in matrices
-            cycles_interp.(cell2mat(parameter_names{ctr_parameter})).x = ...
-                [cycles_interp.(cell2mat(parameter_names{ctr_parameter})).x; interp_x(:, 1)];
+            cycles_interp.(cell2mat(parameter_names{ctr_parameter})).x{ctr_cycle, ctr_trial} = interp_x(:, 1);
 %             cycles_interp.(cell2mat(parameter_names{ctr_parameter})).y = ...
 %                 [cycles_interp.(cell2mat(parameter_names{ctr_parameter})).y; interp_y];
 %             cycles_interp.(cell2mat(parameter_names{ctr_parameter})).z = ...
@@ -174,9 +173,12 @@ end
 
 %% PLOT interpolated data
 for i = 1 : length(cycles_interp.RKneeAngles.x(:, 1))
-    temp_data = cycles_interp.RKneeAngles.x;
-    figure(2)
-    subplot(1, 2, 2)
-    plot(query_points, temp_data)
-    hold on;
+    for j = 1 : length(cycles_interp.RKneeAngles.x(1, :))
+
+        temp_data = cycles_interp.RKneeAngles.x{i, j};
+        figure(2)
+        subplot(1, 2, 2)
+        plot(temp_data)
+        hold on;
+    end
 end
