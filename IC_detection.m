@@ -3,6 +3,8 @@ clear;
 close all;
 
 %%
+barefoot_flag = 0;
+shoe_flag = 1;
 
 cd("shoe\"); 
 load("data_sorted.mat");
@@ -117,7 +119,7 @@ for n_trial = 1:number_trials
         for IC_counter = 1:(length(current_idx)-1)
             try
         cycles_complete.(cell2mat(parameter_names{param})){IC_counter,n_trial}...
-            = current_data(current_idx(IC_counter):current_idx(IC_counter +1),columns_data_cycles);
+            = current_data(current_idx(IC_counter)+1:current_idx(IC_counter +1)+1,columns_data_cycles);
             catch
                 disp([num2str(n_trial),'/',num2str(param),'/', num2str(IC_counter)])
             end
@@ -139,7 +141,7 @@ for j = 1:12
     end
 end
 
-%% NORMALISATION i.e. interpolation
+%% NORMALISATION i.e. interpolation & averaging(?)
 for ctr_parameter = 1 : length(parameter_names)
     % skip idx37 (Arch Height Index), empty array
     if ctr_parameter == 37
@@ -153,32 +155,65 @@ for ctr_parameter = 1 : length(parameter_names)
     current_parameter = cycles_complete.(cell2mat(parameter_names{ctr_parameter}));
     for ctr_trial = 1 : numel(current_parameter(1, :))
         for ctr_cycle = 1 : numel(current_parameter(:, 1))
-            sample_points = 1 : 1 : length(current_parameter{ctr_cycle, ctr_trial});
+            sample_points = transpose(1 : 1 : length(current_parameter{ctr_cycle, ctr_trial}));
             sample_values = current_parameter{ctr_cycle, ctr_trial};
-            query_points = 1 : 1 : 101;
+            query_points = transpose(linspace(1, length(sample_points), 101));
 
-            interp_x = interp1(sample_points, sample_values, query_points, 'spline');
-%             interp_y = interp1(sample_points, sample_values(:, 2), query_points, 'spline');
-%             interp_z = interp1(sample_points, sample_values(:, 3), query_points, 'spline');
+            interp_x = interp1(sample_points, sample_values(:, 1), query_points, 'spline');
+            interp_y = interp1(sample_points, sample_values(:, 2), query_points, 'spline');
+            interp_z = interp1(sample_points, sample_values(:, 3), query_points, 'spline');
     
             % store in matrices
-            cycles_interp.(cell2mat(parameter_names{ctr_parameter})).x{ctr_cycle, ctr_trial} = interp_x(:, 1);
-%             cycles_interp.(cell2mat(parameter_names{ctr_parameter})).y = ...
-%                 [cycles_interp.(cell2mat(parameter_names{ctr_parameter})).y; interp_y];
-%             cycles_interp.(cell2mat(parameter_names{ctr_parameter})).z = ...
-%                 [cycles_interp.(cell2mat(parameter_names{ctr_parameter})).z; interp_z];
+            cycles_interp.(cell2mat(parameter_names{ctr_parameter})).x = ...
+                [cycles_interp.(cell2mat(parameter_names{ctr_parameter})).x, interp_x];
+            cycles_interp.(cell2mat(parameter_names{ctr_parameter})).y = ...
+                [cycles_interp.(cell2mat(parameter_names{ctr_parameter})).y, interp_y];
+            cycles_interp.(cell2mat(parameter_names{ctr_parameter})).z = ...
+                [cycles_interp.(cell2mat(parameter_names{ctr_parameter})).z, interp_z];
         end
     end
+    cycles_mean.(cell2mat(parameter_names{ctr_parameter})) = ...
+        [mean(cycles_interp.(cell2mat(parameter_names{ctr_parameter})).x, 2), ...
+        mean(cycles_interp.(cell2mat(parameter_names{ctr_parameter})).y, 2), ...
+        mean(cycles_interp.(cell2mat(parameter_names{ctr_parameter})).z, 2)];
 end
+% clear variables that are not further accessed
+clear ctr_parameter ctr_trial ctr_cycle current_parameter sample_points sample_values query_points interp_x interp_y interp_z
+
 
 %% PLOT interpolated data
-for i = 1 : length(cycles_interp.RKneeAngles.x(:, 1))
-    for j = 1 : length(cycles_interp.RKneeAngles.x(1, :))
+for j = 1 : length(cycles_interp.RKneeAngles.x(1, :))
 
-        temp_data = cycles_interp.RKneeAngles.x{i, j};
-        figure(2)
-        subplot(1, 2, 2)
-        plot(temp_data)
-        hold on;
-    end
+    temp_data = cycles_interp.RKneeAngles.x(:, j); %{i, j};
+    figure(2)
+    subplot(1, 2, 2)
+    plot(temp_data, Color=[0.5 0.5 0.5])
+    hold on;
+
+    temp_data2 = cycles_interp.RAnkleAngles.x(:, j); %{i, j};
+    figure(3)
+    plot(temp_data2, Color=[0.5 0.5 0.5])
+    hold on;
+    
 end
+figure(2)
+plot(cycles_mean.RKneeAngles(:, 1), LineWidth=2)
+figure(3)
+plot(cycles_mean.RAnkleAngles(:, 1), LineWidth=2)
+
+%% Save data
+if barefoot_flag
+    barefoot = struct();
+    barefoot.cycles = cycles_complete;
+    barefoot.interp = cycles_interp;
+    barefoot.mean = cycles_mean;
+    save("normalized_data_barefoot.mat", "barefoot", "parameter_names")
+elseif shoe_flag
+    shoe = struct();
+    shoe.cycles = cycles_complete;
+    shoe.interp = cycles_interp;
+    shoe.mean = cycles_mean;
+    save("normalized_data_shoe.mat", "shoe", "parameter_names")
+end
+
+

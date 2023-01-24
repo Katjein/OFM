@@ -21,8 +21,8 @@ close all;
 %%
 
 
-cd("shoe"); % change depending on folder name  
-subject_name = 'KatjaK:'; % change depending on subject name
+cd("barefoot\"); % change depending on folder name  
+subject_name = 'KatjaKo:'; % change depending on subject name
 files_list_vicon = dir("*vicon*.csv"); % change depending on file name
 files_list_force = dir("*force*.csv"); % change depending on file name
 row_parameters_name = 3;
