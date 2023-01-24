@@ -4,7 +4,7 @@ close all;
 
 %%
 
-cd("shoe"); % Matthias: "barefoot\" % Katja: "../Measurement_20_01_2023/barefoot\" 
+cd("shoe\"); % Matthias: "barefoot\" % Katja: "../Measurement_20_01_2023/barefoot\" 
 load("data_sorted.mat");
 
 start_force_data = 6;
@@ -105,9 +105,8 @@ clear current_parameter find_ICs current_axes min_value max_value point_found_co
 
 %% cut cycles
 
-
 for n_para = 1:length(parameter_names)
-    cycles_complete.(cell2mat(parameter_names{n_para})) = cell(10,number_trials);
+    cycles_complete.(cell2mat(parameter_names{n_para})) = cell(4,number_trials);
 end
 
 for n_trial = 1:number_trials
@@ -126,6 +125,7 @@ for n_trial = 1:number_trials
     end
 end
 % clear variables that are not further accessed
+clear n_trial current_trial current_idx param IC_counter 
 
 
 % plot
@@ -133,7 +133,50 @@ for j = 1:12
     for i = 1:4
     temp_data = cycles_complete.RKneeAngles{i,j};
     figure(2)
+    subplot(1, 2, 1)
     plot(temp_data(:,1))
     hold on;
     end
+end
+
+%% NORMALISATION i.e. interpolation
+for ctr_parameter = 1 : length(parameter_names)
+    % skip idx37 (Arch Height Index), empty array
+    if ctr_parameter == 37
+        continue
+    end
+    % Define matrix for all interpolated cacles (adds row-wise)
+    cycles_interp.(cell2mat(parameter_names{ctr_parameter})).x = [];
+    cycles_interp.(cell2mat(parameter_names{ctr_parameter})).y = [];
+    cycles_interp.(cell2mat(parameter_names{ctr_parameter})).z = [];
+
+    current_parameter = cycles_complete.(cell2mat(parameter_names{ctr_parameter}));
+    for ctr_trial = 1 : numel(current_parameter(1, :))
+        for ctr_cycle = 1 : numel(current_parameter(:, 1))
+            sample_points = 1 : 1 : length(current_parameter{ctr_cycle, ctr_trial});
+            sample_values = current_parameter{ctr_cycle, ctr_trial};
+            query_points = 1 : 1 : 101;
+
+            interp_x = interp1(sample_points, sample_values, query_points, 'makima');
+%             interp_y = interp1(sample_points, sample_values(:, 2), query_points, 'spline');
+%             interp_z = interp1(sample_points, sample_values(:, 3), query_points, 'spline');
+    
+            % store in matrices
+            cycles_interp.(cell2mat(parameter_names{ctr_parameter})).x = ...
+                [cycles_interp.(cell2mat(parameter_names{ctr_parameter})).x; interp_x(:, 1)];
+%             cycles_interp.(cell2mat(parameter_names{ctr_parameter})).y = ...
+%                 [cycles_interp.(cell2mat(parameter_names{ctr_parameter})).y; interp_y];
+%             cycles_interp.(cell2mat(parameter_names{ctr_parameter})).z = ...
+%                 [cycles_interp.(cell2mat(parameter_names{ctr_parameter})).z; interp_z];
+        end
+    end
+end
+
+%% PLOT interpolated data
+for i = 1 : length(cycles_interp.RKneeAngles.x(:, 1))
+    temp_data = cycles_interp.RKneeAngles.x;
+    figure(2)
+    subplot(1, 2, 2)
+    plot(query_points, temp_data)
+    hold on;
 end
