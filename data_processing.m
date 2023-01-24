@@ -21,7 +21,7 @@ close all;
 %%
 
 
-cd("shoe"); % change depending on folder name  %Katja:  ../Measurement_20_01_2023/shoe\
+cd("shoe"); % change depending on folder name  
 subject_name = 'KatjaK:'; % change depending on subject name
 files_list_vicon = dir("*vicon*.csv"); % change depending on file name
 files_list_force = dir("*force*.csv"); % change depending on file name
