@@ -41,7 +41,17 @@ for current_parameter = 1 : length(list_parameters)
 end
 
 
-%% BOOTSTRAP
+%% CONFIDENCE BANDS
+for row = 1 : length(barefoot.interp.RTIBA.x(:, 1))
+    barefoot.std.RTIBA(row, :) = std(barefoot.interp.RTIBA.x(row, :));
+    barefoot.CI(row, 1) = barefoot.mean.RTIBA(row, 1) - (1.96 *barefoot.std.RTIBA(row)); % lower CI
+    barefoot.CI(row, 2) = barefoot.mean.RTIBA(row, 1) + (1.96 *barefoot.std.RTIBA(row)); % upper CI
+end
+
+x = 1 : 1 : 101;
+figure(1)
+patch([x fliplr(x)], [barefoot.CI(:, 1)' fliplr(barefoot.CI(:, 2)')], [0, 0.4470, 0.7410], FaceAlpha=0.3);
+
 
 % -> ganze Kurve vergleichen vs. Kennmale 
 % -> interpolation ganz oder über peaks/valleys
@@ -50,3 +60,4 @@ end
 %% Limitations
 % - case study
 % - 12x4 Schritte statt 50 am Stück -> unterschiedlichere Gangzyklen
+
