@@ -62,6 +62,10 @@ for current_parameter = 1 : length(list_parameters)
             shoe.mean.(cell2mat(list_parameters(current_parameter)))(row, 3) + (1.96 *shoe.std.(cell2mat(list_parameters(current_parameter)))(row, 3));
     end
 
+    % RELIABILITY
+    % ICC
+    % SEM
+
     % PLOTS
     % saggital = Dorsalflexion
     figure(1)
@@ -112,7 +116,7 @@ for current_parameter = 1 : length(list_parameters)
     subtitle('Transversal Plane')
     legend('CI barefoot', 'barefoot mean', 'CI shoe', 'shoe mean')
     xlabel('Gait Cycle (%)')
-    ylabel('Dorsiflexion (deg)')
+    ylabel('External Rotation (deg)')
 
     % frontal = Pronation/Supination
     figure(3) 
@@ -138,12 +142,10 @@ for current_parameter = 1 : length(list_parameters)
     subtitle('Frontal Plane')
     legend('CI barefoot', 'barefoot mean', 'CI shoe', 'shoe mean')
     xlabel('Gait Cycle (%)')
-    ylabel('Dorsiflexion (deg)')
+    ylabel('Pronation/Supination (deg)')
 end
 
 
-% -> ganze Kurve vergleichen vs. Kennmale 
-% -> interpolation ganz oder über peaks/valleys
 
 
 %% Limitations
