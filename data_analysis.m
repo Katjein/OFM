@@ -61,12 +61,15 @@ for current_parameter = 1 : length(list_parameters)
         shoe.CI.upper.(cell2mat(list_parameters(current_parameter)))(row, 3) = ... % Z
             shoe.mean.(cell2mat(list_parameters(current_parameter)))(row, 3) + (1.96 *shoe.std.(cell2mat(list_parameters(current_parameter)))(row, 3));
     end
-
-    % RELIABILITY
+    %% RELIABILITY
     % ICC
     % SEM
 
-    % PLOTS
+    % Bland Altman
+    % for all data at a specific point in time
+    bad = blandAltmanDiagram(barefoot.interp.RFFHFA.y(60, :), shoe.interp.RFFHFA.y(60, :));
+
+    %% PLOTS
     % saggital = Dorsalflexion
     figure(1)
     subplot(ceil(length(list_parameters)), 1, current_parameter)
@@ -143,7 +146,21 @@ for current_parameter = 1 : length(list_parameters)
     legend('CI barefoot', 'barefoot mean', 'CI shoe', 'shoe mean')
     xlabel('Gait Cycle (%)')
     ylabel('Pronation/Supination (deg)')
+
 end
+
+    % 5 - BLAND ALTMAN PLOT
+    figure(5)
+    scatter( bad.median, bad.diff)
+    hold on
+    yline(bad.LoA(1), Color=[1 0 0], LineStyle="--")
+    yline(bad.LoA(2), Color=[1 0 0], LineStyle="-.")
+    yline(bad.meanDiff, Color=[0 0 0], LineStyle="--")
+    legend( "datapoints", "Lower Limit of Agreement", "Upper Limit of Agreement", "Mean")
+    title("Bland-Altmann-Diagramm")
+    xlabel( "median" )
+    ylabel( "discrepancy" )
+
 
 
 
@@ -152,3 +169,25 @@ end
 % - case study
 % - 12x4 Schritte statt 50 am Stück -> unterschiedlichere Gangzyklen
 
+
+
+function blandAltman = blandAltmanDiagram(data1, data2)
+% Bland-Altman-Diagramm
+    % 95% Confidence Interval
+
+diff = data1 - data2;     %diff
+median_BAD = zeros([length(diff), 1]); %median
+for C = 1 : length(data1)
+    median_BAD(C, 1) = median( [data1(C), data2(C)]);
+end
+
+SD = std(diff);     %std
+
+KI95 = SD * 1.96;   % 95% Confidence Intervall
+
+mean_BAD = mean(diff);
+LoA(2) = mean_BAD + KI95;
+LoA(1) = mean_BAD - KI95;
+
+blandAltman = struct('diff', diff, 'median', median_BAD, 'meanDiff', mean_BAD, 'LoA', LoA);
+end
