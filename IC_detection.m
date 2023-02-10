@@ -2,11 +2,11 @@ clc;
 clear;
 close all;
 
-%%
-barefoot_flag = 0;
-shoe_flag = 1;
+%% CHANGE ME 
+barefoot_flag = 1;
+shoe_flag = 0;
 
-cd("shoe\"); 
+cd("barefoot\"); 
 load("data_sorted.mat");
 
 start_force_data = 6;
@@ -131,7 +131,7 @@ clear n_trial current_trial current_idx param IC_counter
 
 
 % plot
-for j = 1:12
+for j = 1:number_trials
     for i = 1:4
     temp_data = cycles_complete.RKneeAngles{i,j};
     figure(2)

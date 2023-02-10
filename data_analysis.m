@@ -10,7 +10,7 @@ cd("../shoe\");
 load("normalized_data_shoe.mat");
 
 %%
-list_parameters = {'RTIBA', 'RFFHFA'}; % list parameters that should be displayed % 'RFFHFA', 'RHFTBA','RFFTBA'
+list_parameters = {'RTIBA', 'RFFHFA','RHFTBA','RFFTBA'}; % list parameters that should be displayed % 'RFFHFA', 'RHFTBA','RFFTBA'
 x = 1:1:length(barefoot.mean.LANA);
 
 for current_parameter = 1 : length(list_parameters)
