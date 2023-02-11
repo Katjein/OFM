@@ -14,6 +14,7 @@ cd(base_path)
 list_parameters = {'RFFTBA','RHFTBA','RFFHFA','RHXFFA'}; % list parameters that should be displayed % 'RFFHFA', 'RHFTBA','RFFTBA'
 x = 1:1:length(barefoot.mean.LANA);
 
+
 for current_parameter = 1 : length(list_parameters)
 
     % CONFIDENCE BANDS
@@ -114,6 +115,7 @@ for current_parameter = 1 : length(list_parameters)
     bad = blandAltmanDiagram(barefoot.interp.RFFHFA.y(60, :), shoe.interp.RFFHFA.y(60, :));
 
     %% PLOTS
+    t = 0:1:100;
     % saggital = Dorsalflexion
     figure(1)
     subplot(ceil(length(list_parameters)), 1, current_parameter)
@@ -125,7 +127,7 @@ for current_parameter = 1 : length(list_parameters)
         [0, 0.4470, 0.7410], ... % color
         FaceAlpha=0.3, ...     % intensity
         EdgeColor='none');
-    plot(barefoot.mean.(cell2mat(list_parameters(current_parameter)))(:, 1) )
+    plot(t,barefoot.mean.(cell2mat(list_parameters(current_parameter)))(:, 1) )
     %shoe
     patch([x fliplr(x)], ...
         [shoe.CI.lower.(cell2mat(list_parameters(current_parameter)))(:, 1)', ... % lower limit
@@ -133,7 +135,7 @@ for current_parameter = 1 : length(list_parameters)
         [0.8500 0.3250 0.0980], ... % color
         FaceAlpha=0.3, ...     % intensity
         EdgeColor='none');
-    plot(shoe.mean.(cell2mat(list_parameters(current_parameter)))(:, 1) )
+    plot(t,shoe.mean.(cell2mat(list_parameters(current_parameter)))(:, 1) )
     title(list_parameters(current_parameter))
     subtitle('Saggital Plane')
     legend('CI barefoot', 'barefoot mean', 'CI shoe', 'shoe mean')
@@ -150,7 +152,7 @@ for current_parameter = 1 : length(list_parameters)
         [0, 0.4470, 0.7410], ... % color
         FaceAlpha=0.3, ...     % intensity
         EdgeColor='none');
-    plot(barefoot.mean.(cell2mat(list_parameters(current_parameter)))(:, 2) )
+    plot(t,barefoot.mean.(cell2mat(list_parameters(current_parameter)))(:, 2) )
     % shoe
     patch([x fliplr(x)], ...
         [shoe.CI.lower.(cell2mat(list_parameters(current_parameter)))(:, 2)', ... % lower limit
@@ -158,7 +160,7 @@ for current_parameter = 1 : length(list_parameters)
         [0.8500 0.3250 0.0980], ... % color
         FaceAlpha=0.3, ...     % intensity
         EdgeColor='none');
-    plot(shoe.mean.(cell2mat(list_parameters(current_parameter)))(:, 2) )
+    plot(t,shoe.mean.(cell2mat(list_parameters(current_parameter)))(:, 2) )
     title(list_parameters(current_parameter))
     subtitle('Transversal Plane')
     legend('CI barefoot', 'barefoot mean', 'CI shoe', 'shoe mean')
@@ -176,7 +178,7 @@ for current_parameter = 1 : length(list_parameters)
         [0, 0.4470, 0.7410], ... % color
         FaceAlpha=0.3, ...     % intensity
         EdgeColor='none');
-    plot(barefoot.mean.(cell2mat(list_parameters(current_parameter)))(:, 3) )
+    plot(t,barefoot.mean.(cell2mat(list_parameters(current_parameter)))(:, 3) )
     % shoe
     patch([x fliplr(x)], ...
         [shoe.CI.lower.(cell2mat(list_parameters(current_parameter)))(:, 3)', ... % lower limit
@@ -184,7 +186,7 @@ for current_parameter = 1 : length(list_parameters)
         [0.8500 0.3250 0.0980], ... % color
         FaceAlpha=0.3, ...     % intensity
         EdgeColor='none');
-    plot(shoe.mean.(cell2mat(list_parameters(current_parameter)))(:, 3) )
+    plot(t,shoe.mean.(cell2mat(list_parameters(current_parameter)))(:, 3) )
     title(list_parameters(current_parameter))
     subtitle('Frontal Plane')
     legend('CI barefoot', 'barefoot mean', 'CI shoe', 'shoe mean')
