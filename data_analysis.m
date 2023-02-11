@@ -11,7 +11,7 @@ load("normalized_data_shoe.mat");
 cd(base_path)
 
 %%
-list_parameters = {'RFFHFA','RHFTBA','RHXFFA'}; % list parameters that should be displayed % 'RFFHFA', 'RHFTBA','RFFTBA'
+list_parameters = {'RFFTBA','RHFTBA','RFFHFA','RHXFFA'}; % list parameters that should be displayed % 'RFFHFA', 'RHFTBA','RFFTBA'
 x = 1:1:length(barefoot.mean.LANA);
 
 for current_parameter = 1 : length(list_parameters)
@@ -95,7 +95,13 @@ for current_parameter = 1 : length(list_parameters)
         end
 
 
-
+        mean_diff(current_parameter,:) = barefoot.meanROM.(cell2mat(list_parameters(current_parameter))) - shoe.meanROM.(cell2mat(list_parameters(current_parameter)));
+        for std_counter = 1:length(shoe.stdROM.(cell2mat(list_parameters(current_parameter)))(:,:))
+            std_1 = barefoot.stdROM.(cell2mat(list_parameters(current_parameter)))(std_counter);
+            std_2 = shoe.stdROM.(cell2mat(list_parameters(current_parameter)))(std_counter);
+            mean_std(current_parameter,std_counter) = sqrt(std_1.^2 / col + std_2.^2 / col);
+        end
+% σd = sqrt( σ1^^2 / n1 + σ2^^2 / n2 )
 
 
     end
