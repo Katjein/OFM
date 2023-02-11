@@ -2,12 +2,14 @@ clc;
 clear;
 close all;
 
-%% CHANGE ME 
-barefoot_flag = 1;
-shoe_flag = 0;
+%% CHANGE ME
+current_path = pwd;
+barefoot_flag = 0;
+shoe_flag = 1;
 
-cd("barefoot\"); 
+cd("shoe\"); 
 load("data_sorted.mat");
+cd(current_path);
 
 start_force_data = 6;
 frame_col = 1;
@@ -202,18 +204,18 @@ figure(3)
 plot(cycles_mean.RAnkleAngles(:, 1), LineWidth=2)
 
 %% Save data
-if barefoot_flag
-    barefoot = struct();
-    barefoot.cycles = cycles_complete;
-    barefoot.interp = cycles_interp;
-    barefoot.mean = cycles_mean;
-    save("normalized_data_barefoot.mat", "barefoot", "parameter_names")
-elseif shoe_flag
-    shoe = struct();
-    shoe.cycles = cycles_complete;
-    shoe.interp = cycles_interp;
-    shoe.mean = cycles_mean;
-    save("normalized_data_shoe.mat", "shoe", "parameter_names")
-end
+% if barefoot_flag
+%     barefoot = struct();
+%     barefoot.cycles = cycles_complete;
+%     barefoot.interp = cycles_interp;
+%     barefoot.mean = cycles_mean;
+%     save("normalized_data_barefoot.mat", "barefoot", "parameter_names")
+% elseif shoe_flag
+%     shoe = struct();
+%     shoe.cycles = cycles_complete;
+%     shoe.interp = cycles_interp;
+%     shoe.mean = cycles_mean;
+%     save("normalized_data_shoe.mat", "shoe", "parameter_names")
+% end
 
 
